@@ -1,6 +1,10 @@
 package es.unizar.webeng.lab3
 
 import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
+import io.mockk.justRun
+import io.mockk.slot
+import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -12,7 +16,6 @@ import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.put
-import io.mockk.*
 import java.util.Optional
 
 private val MANAGER_REQUEST_BODY = { name: String ->
@@ -48,7 +51,6 @@ class ControllerTests {
     fun `POST is not safe and not idempotent`() {
 
         // SETUP
-        
         val employee = slot<Employee>()
         every {
             employeeRepository.save(capture(employee))
@@ -83,9 +85,7 @@ class ControllerTests {
                 json(MANAGER_RESPONSE_BODY("Mary", 2))
             }
         }
-
         // VERIFY
-
     }
 
     @Test
@@ -124,7 +124,6 @@ class ControllerTests {
         mvc.get("/employees/2").andExpect {
             status { isNotFound() }
         }
-
 
         // VERIFY
         verify(exactly = 2) {
@@ -181,7 +180,6 @@ class ControllerTests {
             employeeRepository.save(Employee("Tom", "Manager", 1))
         }
         // VERIFY
-
     }
 
     @Test
@@ -193,7 +191,7 @@ class ControllerTests {
         }
 
         every {
-        employeeRepository.findById(1)
+            employeeRepository.findById(1)
         } answers {
             Optional.of(Employee("Tom", "Manager", 1))
         } andThenAnswer {
@@ -212,6 +210,5 @@ class ControllerTests {
         verify(exactly = 1) {
             employeeRepository.deleteById(1)
         }
-    
     }
 }
