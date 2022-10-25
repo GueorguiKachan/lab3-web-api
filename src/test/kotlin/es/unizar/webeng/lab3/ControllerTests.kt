@@ -58,7 +58,6 @@ class ControllerTests {
             employee.captured.copy(id = 2)
         }
 
-
         mvc.post("/employees") {
             contentType = MediaType.APPLICATION_JSON
             content = MANAGER_REQUEST_BODY("Mary")
